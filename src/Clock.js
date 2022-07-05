@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import { useTimer } from 'react-timer-hook';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import styled from 'styled-components';
 
 const theme = {
@@ -28,7 +28,7 @@ const Button = styled.button`
   height: 200px;
 `;
 
-function MyTimer({ color, expireTimeInSeconds: expiryTimestamp, initiallyRunning }) {
+function MyTimer({ color, expireTimeInSeconds: expiryTimestamp, isActive, onClick }) {
   const {
     seconds,
     minutes,
@@ -42,26 +42,35 @@ function MyTimer({ color, expireTimeInSeconds: expiryTimestamp, initiallyRunning
   } = useTimer({ expiryTimestamp: expiryTimestamp, onExpire: () => console.warn('onExpire called') });
 
   useEffect(() => {
-    if (initiallyRunning) start();
-    else pause();
+    start();
+    pause();
   }, [])
 
-  const toggle = useCallback(() => {
-    if (isRunning) pause();
-    else resume();
-  }, [pause, resume, isRunning]);
+  useEffect(() => {
+    if (isActive && !isRunning) resume();
+  }, [isActive, resume, isRunning])
+
+  const handleClick = useCallback(() => {
+    if (!isRunning) return;
+    pause();
+    onClick();
+  }, [isRunning, pause, onClick])
 
   return (
     <Button
       backgroundColor={color}
-      onClick={toggle}
+      onClick={handleClick}
       isRunning={isRunning}
     >
     <div style={{fontSize: '100px'}}>
-      <span>{minutes}</span>:<span>{seconds}</span>
+      <span>{minutes}</span>:<span>{format_two(seconds)}</span>
     </div>
     </Button>
   );
 }
 
+function format_two(value) {
+  if (value < 10) return '0' + value
+  else return value
+}
 export default MyTimer;
