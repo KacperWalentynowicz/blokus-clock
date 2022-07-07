@@ -32,13 +32,10 @@ function MyTimer({ color, expireTimeInSeconds: expiryTimestamp, isActive, onClic
   const {
     seconds,
     minutes,
-    hours,
-    days,
     isRunning,
     start,
     pause,
     resume,
-    restart,
   } = useTimer({ expiryTimestamp: expiryTimestamp, onExpire: () => console.warn('onExpire called') });
 
   useEffect(() => {
@@ -48,13 +45,14 @@ function MyTimer({ color, expireTimeInSeconds: expiryTimestamp, isActive, onClic
 
   useEffect(() => {
     if (isActive && !isRunning) resume();
-  }, [isActive, resume, isRunning])
+    if (!isActive && isRunning) pause();
+  }, [isActive, isRunning, resume, pause])
 
   const handleClick = useCallback(() => {
     if (!isRunning) return;
     pause();
     onClick();
-  }, [isRunning, pause, onClick])
+  }, [isRunning, pause, onClick]);
 
   return (
     <Button

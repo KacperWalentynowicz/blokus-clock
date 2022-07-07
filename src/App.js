@@ -1,6 +1,8 @@
 import MyTimer from './Clock.js'
 import './App.css';
 import {useCallback, useState} from "react";
+const MINS_TO_MILLISECONDS = 60000;
+
 function App() {
   const players = [
     {
@@ -24,28 +26,67 @@ function App() {
       index: 3
     }]
 
+
   const [turn, setTurn] = useState(-1)
-  const time = new Date();
+  const [timerDuration, setTimerDuration] = useState(10);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [finishTimestamp, setFinishTimestamp] = useState(null);
+  const [memoizedTurn, setMemoizedTurn] = useState(-1);
 
   const nextPlayerTurn = useCallback(() => {
     setTurn(turn => (turn + 1) % 4)
   }, [setTurn]);
 
-  time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
+  const handleInputChange = event => {
+    const result = event.target.value.replace(/\D/g, '');
+    setTimerDuration(result);
+    setFinishTimestamp(new Date(Date.now() + MINS_TO_MILLISECONDS * result));
+  };
+
+  const startGame = useCallback(() => {
+    setFinishTimestamp(new Date(Date.now() + MINS_TO_MILLISECONDS * timerDuration));
+    setTurn(0);
+    setGameStarted(true);
+  }, [setTurn, timerDuration, setGameStarted, setFinishTimestamp]);
+
+  const handlePause = useCallback(() => {
+    if (memoizedTurn === -1) {
+      setMemoizedTurn(turn);
+      setTurn(-1);
+    }
+    else {
+      setTurn(memoizedTurn);
+      setMemoizedTurn(-1);
+    }
+  }, [setTurn, setMemoizedTurn, turn, memoizedTurn]);
+
     return (
       <div style={{textAlign: 'center'}}>
-        <p>Blokus Clock! Still needs some work though... </p>
-        <button
-        onClick={() => setTurn(0)}
+        <p>Blokus Clock! Needs some more work but playable, enjoy... </p>
+        <div>Minutes per player{" "}{" "}
+          <input
+            type='text'
+            pattern='[0-9]'
+            onChange={handleInputChange}
+            value={timerDuration}
+          />
+        </div>
+        {!gameStarted ? <button
+        onClick={startGame}
         >
           Start game!
-        </button>
+        </button> : null}
+        {gameStarted ? <button
+          onClick={handlePause}
+        >
+          {memoizedTurn === -1 ? 'Pause' : 'Resume'}
+        </button> : null}
         <div>
-          {players.map(player => {
+          {gameStarted && players.map(player => {
             return <
               MyTimer color={player.color}
               key={player.key}
-              expireTimeInSeconds={time}
+              expireTimeInSeconds={finishTimestamp}
               isActive={turn === player.index}
               onClick={nextPlayerTurn}
             />
