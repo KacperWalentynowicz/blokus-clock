@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/blokus-clock/static/css/main.073c9b0a.css",
-    "main.js": "/blokus-clock/static/js/main.8c8911c5.js",
+    "main.js": "/blokus-clock/static/js/main.06c3df86.js",
     "static/js/787.6d01e4b2.chunk.js": "/blokus-clock/static/js/787.6d01e4b2.chunk.js",
     "index.html": "/blokus-clock/index.html",
     "main.073c9b0a.css.map": "/blokus-clock/static/css/main.073c9b0a.css.map",
-    "main.8c8911c5.js.map": "/blokus-clock/static/js/main.8c8911c5.js.map",
+    "main.06c3df86.js.map": "/blokus-clock/static/js/main.06c3df86.js.map",
     "787.6d01e4b2.chunk.js.map": "/blokus-clock/static/js/787.6d01e4b2.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.8c8911c5.js"
+    "static/js/main.06c3df86.js"
   ]
 }
