@@ -3,7 +3,7 @@ import { useTimer } from 'react-timer-hook';
 import { useCallback } from 'react';
 import styled from 'styled-components';
 
-const theme = {
+export const theme = {
   red: {
     default: 'rgba(255, 0, 0, 0.3)',
     playing: 'rgba(255, 0, 0, 1)'
